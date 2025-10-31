@@ -1,6 +1,6 @@
 /* src/pages/Home.css */
 .hero-bg {
-  background-image: url('fond_page_accueil.png');
+  background-image: url('/festivhall/fond_page_accueil.png'); /* chemin absolu corrigé */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
