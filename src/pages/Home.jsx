@@ -2,14 +2,8 @@ import { Link } from 'react-router-dom';
 import './Home.css';
 
 export default function Home() {
-  // chemin dynamique qui marche en local ET en prod
-  const bgUrl = `${import.meta.env.BASE_URL}fond_page_accueil.png`;
-
   return (
-    <main
-      style={{ backgroundImage: `url(${bgUrl})` }}
-      className="relative min-h-screen flex flex-col bg-cover bg-center bg-no-repeat"
-    >
+    <main className="relative min-h-screen flex flex-col page-bg">
       {/* HERO SECTION */}
       <section className="relative h-[64vh] lg:h-screen overflow-hidden flex-shrink-0">
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-transparent"></div>

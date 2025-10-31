@@ -1,3 +1,13 @@
+.page-bg {
+  background-image: url('/festivhall/fond_page_accueil.png');
+  background-size: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 /* Animations */
 @keyframes slideDown {
   from { opacity: 0; transform: translateY(-40px); }
@@ -15,10 +25,3 @@
   animation: fadeInSlow 2s ease-in forwards;
 }
 
-/* Footer translucide comme les cartes */
-.footer-style {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-}
