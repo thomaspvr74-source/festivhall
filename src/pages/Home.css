@@ -1,0 +1,7 @@
+/* src/pages/Home.css */
+.hero-bg {
+  background-image: url('/fond_page_accueil.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
