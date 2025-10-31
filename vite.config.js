@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/festivhall/', // 👈 correspond exactement au nom de ton repo GitHub
+  base: '/festivhall/', // 👈 le nom exact de ton repo GitHub
   server: {
     port: 5173,
     open: true,
