@@ -1,51 +1,53 @@
-import { Link } from 'react-router-dom';
+import { useState } from "react";
+import { Link } from "react-router-dom";
 
 export default function Header() {
+  const [open, setOpen] = useState(false);
+
   return (
-    <header className="bg-gradient-to-r from-indigo-900 to-purple-700 text-white">
-      <div className="container-max flex items-center justify-between py-4">
-        <Link to="/" className="flex items-center gap-3">
-          <div className="bg-white/10 p-2 rounded-md">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M3 12h18" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
-              <path d="M3 6h18" stroke="white" strokeWidth="1.5" strokeLinecap="round" opacity="0.6" />
-              <path d="M3 18h18" stroke="white" strokeWidth="1.5" strokeLinecap="round" opacity="0.3" />
-            </svg>
+    <header id="site-header" className="fixed top-0 left-0 w-full z-50 bg-black/70 text-white">
+      <div className="flex items-center justify-between px-6 py-4">
+        {/* Logo + Burger */}
+        <div className="flex items-center gap-4">
+          {/* Burger */}
+          <div
+            className="w-8 h-8 flex flex-col justify-center gap-1 cursor-pointer"
+            onMouseEnter={() => setOpen(true)}
+            onMouseLeave={() => setOpen(false)}
+          >
+            <span className="block h-1 bg-white rounded"></span>
+            <span className="block h-1 bg-white rounded"></span>
+            <span className="block h-1 bg-white rounded"></span>
           </div>
+
+          {/* Nom du projet */}
           <span className="font-bold text-lg">Festiv'Hall</span>
-        </Link>
+        </div>
 
-        <nav className="hidden md:flex gap-6 text-sm font-medium items-center">
-          <Link to="/" className="hover:underline">Accueil</Link>
-          <Link to="/evenements" className="hover:underline">Événements</Link>
-          <Link to="/artistes" className="hover:underline">Artistes</Link>
-          <Link to="/privatisation" className="hover:underline">Privatiser</Link>
+        {/* Navigation classique à droite */}
+        <nav className="hidden md:flex gap-6">
+          <Link to="/" className="hover:text-indigo-400">Accueil</Link>
+          <Link to="/evenements" className="hover:text-indigo-400">Événements</Link>
+          <Link to="/artistes" className="hover:text-indigo-400">Artistes</Link>
+          <Link to="/privatisation" className="hover:text-indigo-400">Privatiser</Link>
         </nav>
+      </div>
 
-        <div className="md:hidden">
-          <MobileMenu />
+      {/* Sidebar latéral */}
+      <div
+        className={`fixed top-0 left-0 h-full w-64 bg-black/90 text-white transform transition-transform duration-300 ${
+          open ? "translate-x-0" : "-translate-x-full"
+        }`}
+        onMouseEnter={() => setOpen(true)}
+        onMouseLeave={() => setOpen(false)}
+      >
+        <div className="p-6 flex flex-col gap-6">
+          <Link to="/" className="hover:text-indigo-400">Accueil</Link>
+          <Link to="/evenements" className="hover:text-indigo-400">Événements</Link>
+          <Link to="/artistes" className="hover:text-indigo-400">Artistes</Link>
+          <Link to="/privatisation" className="hover:text-indigo-400">Privatiser</Link>
         </div>
       </div>
     </header>
-  );
-}
-
-function MobileMenu() {
-  return (
-    <details className="relative">
-      <summary className="list-none p-2 rounded-md cursor-pointer">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" className="text-white">
-          <path d="M4 6h16M4 12h16M4 18h16" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
-        </svg>
-      </summary>
-      <div className="absolute right-0 mt-2 w-48 bg-white text-gray-900 rounded-md shadow-lg z-50 overflow-hidden">
-        <ul className="flex flex-col">
-          <li><Link to="/" className="block px-4 py-2 hover:bg-gray-100">Accueil</Link></li>
-          <li><Link to="/evenements" className="block px-4 py-2 hover:bg-gray-100">Événements</Link></li>
-          <li><Link to="/artistes" className="block px-4 py-2 hover:bg-gray-100">Artistes</Link></li>
-          <li><Link to="/privatisation" className="block px-4 py-2 hover:bg-gray-100">Privatiser</Link></li>
-        </ul>
-      </div>
-    </details>
   );
 }

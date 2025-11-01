@@ -38,18 +38,32 @@ export default function Home() {
       {/* SECTION INFOS */}
       <section className="relative z-10 max-w-7xl mx-auto px-6 py-12 flex-shrink-0">
         <div className="grid md:grid-cols-3 gap-6">
-          <div className="bg-white/80 backdrop-blur-sm rounded-lg shadow p-6">
+          {/* Événements */}
+          <Link
+            to="/evenements"
+            className="bg-white/80 backdrop-blur-sm rounded-lg shadow p-6 transform transition duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer"
+          >
             <h3 className="font-semibold text-lg">Événements</h3>
             <p className="mt-2 text-sm text-gray-800">Programmation variée toute l'année.</p>
-          </div>
-          <div className="bg-white/80 backdrop-blur-sm rounded-lg shadow p-6">
+          </Link>
+
+          {/* Privatisations */}
+          <Link
+            to="/privatisation"
+            className="bg-white/80 backdrop-blur-sm rounded-lg shadow p-6 transform transition duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer"
+          >
             <h3 className="font-semibold text-lg">Privatisations</h3>
             <p className="mt-2 text-sm text-gray-800">Formules sur-mesure pour entreprises et soirées privées.</p>
-          </div>
-          <div className="bg-white/80 backdrop-blur-sm rounded-lg shadow p-6">
+          </Link>
+
+          {/* Artistes */}
+          <Link
+            to="/artistes"
+            className="bg-white/80 backdrop-blur-sm rounded-lg shadow p-6 transform transition duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer"
+          >
             <h3 className="font-semibold text-lg">Artistes</h3>
             <p className="mt-2 text-sm text-gray-800">Accueillons talents locaux et têtes d’affiche.</p>
-          </div>
+          </Link>
         </div>
       </section>
     </main>
