@@ -4,7 +4,7 @@ import './Home.css';
 export default function Home() {
   return (
     <main className="relative min-h-screen flex flex-col page-bg">
-      {/* HERO SECTION */}
+      {/* HERO */}
       <section className="relative h-[64vh] lg:h-screen overflow-hidden flex-shrink-0">
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-transparent"></div>
 
@@ -18,16 +18,10 @@ export default function Home() {
             </p>
 
             <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                to="/evenements"
-                className="inline-block bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-md font-semibold transition transform hover:scale-105"
-              >
+              <Link to="/evenements" className="inline-block bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-md font-semibold transition transform hover:scale-105">
                 Voir les événements
               </Link>
-              <Link
-                to="/privatisation"
-                className="inline-block border border-white/40 hover:bg-white/10 text-white px-6 py-3 rounded-md transition transform hover:scale-105"
-              >
+              <Link to="/privatisation" className="inline-block border border-white/40 hover:bg-white/10 text-white px-6 py-3 rounded-md transition transform hover:scale-105">
                 Privatiser la salle
               </Link>
             </div>
@@ -35,34 +29,27 @@ export default function Home() {
         </div>
       </section>
 
-      {/* SECTION INFOS */}
+      {/* INFOS */}
       <section className="relative z-10 max-w-7xl mx-auto px-6 py-12 flex-shrink-0">
-        <div className="grid md:grid-cols-3 gap-6">
-          {/* Événements */}
-          <Link
-            to="/evenements"
-            className="bg-white/80 backdrop-blur-sm rounded-lg shadow p-6 transform transition duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer"
-          >
+        <div className="grid md:grid-cols-4 gap-6">
+          <Link to="/evenements" className="bg-white/80 backdrop-blur-sm rounded-lg shadow p-6 transform transition duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer">
             <h3 className="font-semibold text-lg">Événements</h3>
             <p className="mt-2 text-sm text-gray-800">Programmation variée toute l'année.</p>
           </Link>
 
-          {/* Privatisations */}
-          <Link
-            to="/privatisation"
-            className="bg-white/80 backdrop-blur-sm rounded-lg shadow p-6 transform transition duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer"
-          >
+          <Link to="/privatisation" className="bg-white/80 backdrop-blur-sm rounded-lg shadow p-6 transform transition duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer">
             <h3 className="font-semibold text-lg">Privatisations</h3>
             <p className="mt-2 text-sm text-gray-800">Formules sur-mesure pour entreprises et soirées privées.</p>
           </Link>
 
-          {/* Artistes */}
-          <Link
-            to="/artistes"
-            className="bg-white/80 backdrop-blur-sm rounded-lg shadow p-6 transform transition duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer"
-          >
+          <Link to="/artistes" className="bg-white/80 backdrop-blur-sm rounded-lg shadow p-6 transform transition duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer">
             <h3 className="font-semibold text-lg">Artistes</h3>
             <p className="mt-2 text-sm text-gray-800">Accueillons talents locaux et têtes d’affiche.</p>
+          </Link>
+
+          <Link to="/concept" className="bg-white/80 backdrop-blur-sm rounded-lg shadow p-6 transform transition duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer">
+            <h3 className="font-semibold text-lg">Le concept</h3>
+            <p className="mt-2 text-sm text-gray-800">Découvrez l’histoire et la vision de Festiv’Hall.</p>
           </Link>
         </div>
       </section>

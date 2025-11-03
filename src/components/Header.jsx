@@ -5,7 +5,10 @@ export default function Header() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header id="site-header" className="fixed top-0 left-0 w-full z-50 bg-black/70 text-white">
+    <header
+      id="site-header"
+      className="fixed top-0 left-0 w-full z-50 bg-black/70 text-white"
+    >
       <div className="flex items-center justify-between px-6 py-4">
         {/* Logo + Burger */}
         <div className="flex items-center gap-4">
@@ -26,16 +29,17 @@ export default function Header() {
           </Link>
         </div>
 
-        {/* Navigation classique à droite */}
+        {/* Navigation classique */}
         <nav className="hidden md:flex gap-6">
           <Link to="/" className="hover:text-indigo-400">Accueil</Link>
           <Link to="/evenements" className="hover:text-indigo-400">Événements</Link>
           <Link to="/artistes" className="hover:text-indigo-400">Artistes</Link>
           <Link to="/privatisation" className="hover:text-indigo-400">Privatiser</Link>
+          <Link to="/concept" className="hover:text-indigo-400">Le concept</Link>
         </nav>
       </div>
 
-      {/* Sidebar latéral */}
+      {/* Sidebar mobile */}
       <div
         className={`fixed top-0 left-0 h-full w-64 bg-black/90 text-white transform transition-transform duration-300 ${
           open ? "translate-x-0" : "-translate-x-full"
@@ -48,6 +52,7 @@ export default function Header() {
           <Link to="/evenements" className="hover:text-indigo-400">Événements</Link>
           <Link to="/artistes" className="hover:text-indigo-400">Artistes</Link>
           <Link to="/privatisation" className="hover:text-indigo-400">Privatiser</Link>
+          <Link to="/concept" className="hover:text-indigo-400">Le concept</Link>
         </div>
       </div>
     </header>

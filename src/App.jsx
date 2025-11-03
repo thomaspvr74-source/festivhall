@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import Evenements from './pages/Evenements';
 import Artistes from './pages/Artistes';
 import Privatisation from './pages/Privatisation';
+import Concept from './pages/Concept'; // ✅ nouvelle page
 import './App.css';
 
 export default function App() {
@@ -17,7 +18,6 @@ export default function App() {
       setHeaderHeight(header.offsetHeight);
     }
 
-    // recalculer si la fenêtre change de taille
     const handleResize = () => {
       if (header) setHeaderHeight(header.offsetHeight);
     };
@@ -29,10 +29,10 @@ export default function App() {
   return (
     <Router>
       <div className="flex flex-col min-h-screen">
-        {/* Header avec burger intégré */}
+        {/* Header */}
         <Header />
 
-        {/* Contenu principal avec padding auto */}
+        {/* Contenu principal */}
         <main
           className="flex-grow page-main bg-gray-50"
           style={{ paddingTop: headerHeight }}
@@ -42,11 +42,12 @@ export default function App() {
             <Route path="/evenements" element={<Evenements />} />
             <Route path="/artistes" element={<Artistes />} />
             <Route path="/privatisation" element={<Privatisation />} />
+            <Route path="/concept" element={<Concept />} /> {/* ✅ nouvelle route */}
             <Route path="*" element={<Home />} />
           </Routes>
         </main>
 
-        {/* Footer en bas */}
+        {/* Footer */}
         <Footer />
       </div>
     </Router>
