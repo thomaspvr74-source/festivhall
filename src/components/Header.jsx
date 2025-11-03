@@ -20,8 +20,10 @@ export default function Header() {
             <span className="block h-1 bg-white rounded"></span>
           </div>
 
-          {/* Nom du projet */}
-          <span className="font-bold text-lg">Festiv'Hall</span>
+          {/* Nom du projet cliquable */}
+          <Link to="/" className="font-bold text-lg hover:text-indigo-400">
+            Festiv'Hall
+          </Link>
         </div>
 
         {/* Navigation classique à droite */}
