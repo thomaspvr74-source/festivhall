@@ -33,36 +33,38 @@ const EVENTS = [
 
 export default function Evenements() {
   return (
-    <div className="max-w-7xl mx-auto p-6">
-      <h2 className="text-3xl font-bold mb-6">Événements à venir</h2>
-      <div className="grid md:grid-cols-3 gap-6">
-        {EVENTS.map((ev) => (
-          <article 
-            key={ev.id} 
-            className="event-card bg-white rounded-lg shadow overflow-hidden flex flex-col"
-          >
-            <div className="image-wrapper">
-              <img src={ev.image} alt={ev.title} className="event-image" />
-            </div>
-
-            <div className="p-4 flex flex-col flex-grow">
-              <h3 className="text-lg font-bold">{ev.title}</h3>
-              <p className="text-sm text-gray-600">{ev.date} — {ev.city}</p>
-              <p className="mt-2 text-gray-700 text-sm flex-grow">{ev.description}</p>
-              <div className="mt-4 flex items-center justify-between">
-                <Link 
-                  to={`/evenements/${ev.id}`} 
-                  className="text-indigo-600 font-medium"
-                >
-                  Voir plus
-                </Link>
-                <span className="text-xs text-gray-500 px-2 py-1 border rounded">
-                  {ev.type}
-                </span>
+    <div className="evenements-page">
+      <div className="max-w-7xl mx-auto p-6">
+        <h2 className="text-3xl font-bold mb-6 text-white">Événements à venir</h2>
+        <div className="grid md:grid-cols-3 gap-6">
+          {EVENTS.map((ev) => (
+            <article 
+              key={ev.id} 
+              className="event-card bg-white rounded-lg shadow overflow-hidden flex flex-col"
+            >
+              <div className="image-wrapper">
+                <img src={ev.image} alt={ev.title} className="event-image" />
               </div>
-            </div>
-          </article>
-        ))}
+
+              <div className="p-4 flex flex-col flex-grow">
+                <h3 className="text-lg font-bold">{ev.title}</h3>
+                <p className="text-sm text-gray-600">{ev.date} — {ev.city}</p>
+                <p className="mt-2 text-gray-700 text-sm flex-grow">{ev.description}</p>
+                <div className="mt-4 flex items-center justify-between">
+                  <Link 
+                    to={`/evenements/${ev.id}`} 
+                    className="text-indigo-600 font-medium"
+                  >
+                    Voir plus
+                  </Link>
+                  <span className="text-xs px-2 py-1 rounded">
+                    {ev.type}
+                  </span>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
       </div>
     </div>
   );

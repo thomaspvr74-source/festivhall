@@ -1,0 +1,26 @@
+.privatisation-page {
+  background-image: url('/fond_page_privatisation.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4rem 1rem;
+  position: relative;
+}
+
+.privatisation-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.25); /* voile léger pour contraste */
+  z-index: 0;
+}
+
+.privatisation-page > * {
+  position: relative;
+  z-index: 1; /* contenu au-dessus du voile */
+}

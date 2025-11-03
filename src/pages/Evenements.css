@@ -1,6 +1,36 @@
+/* 🌌 Fond global de la page Événements */
+.evenements-page {
+  background-image: url('/fond_page_evenements.png'); /* ton image générée placée dans /public */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4rem 1rem;
+  position: relative;
+}
+
+.evenements-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.25); /* voile sombre pour contraste */
+  z-index: 0;
+}
+
+.evenements-page > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* 🎟️ Cards d’événements */
 .event-card {
   position: relative;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
 }
 
 .event-card:hover {
@@ -9,6 +39,7 @@
   box-shadow: 0 8px 20px rgba(0,0,0,0.25);
 }
 
+/* Image wrapper */
 .image-wrapper {
   overflow: hidden;
   height: 160px;
@@ -19,14 +50,24 @@
   height: 200px; /* 👉 seulement la card survolée */
 }
 
+/* Image */
 .event-image {
   display: block;
   width: 100%;
   height: auto;
   object-fit: cover;
-
-  /* 👉 Choisis le cadrage ici */
-  object-position: center; /* valeurs possibles : top | center | bottom | 50% 20% */
-
+  object-position: center;
   border-radius: 0.5rem 0.5rem 0 0;
+  transition: transform 0.5s ease;
+}
+
+.event-card:hover .event-image {
+  transform: scale(1.1); /* zoom léger sur l’image */
+}
+
+/* Badge type d’événement */
+.event-card span {
+  background: linear-gradient(135deg, #7c3aed, #ec4899); /* violet → rose */
+  color: white;
+  border: none;
 }
