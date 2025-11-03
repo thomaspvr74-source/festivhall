@@ -52,7 +52,7 @@ export default function Header() {
           <Link to="/evenements" className="hover:text-indigo-400">Événements</Link>
           <Link to="/artistes" className="hover:text-indigo-400">Artistes</Link>
           <Link to="/privatisation" className="hover:text-indigo-400">Privatiser</Link>
-          <Link to="/concept" className="hover:text-indigo-400">Le concept</Link>
+          <Link to="/concept" className="hover:text-indigo-400">Le Concept</Link>
         </div>
       </div>
     </header>
