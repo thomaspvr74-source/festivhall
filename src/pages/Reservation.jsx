@@ -17,17 +17,20 @@ export default function Reservation() {
   const [newSeats, setNewSeats] = useState([]);
   const [categories, setCategories] = useState(seatCategories);
 
-  // Hébergement (panachage)
-  const [hotelCount, setHotelCount] = useState(0);
-  const [aubergeCount, setAubergeCount] = useState(0);
+  // Hébergement par catégorie
+  const [accommodation, setAccommodation] = useState({});
 
   const handleContinue = () => {
     const finalSeats = [...selectedSeats, ...newSeats];
 
-    // Vérification : ne pas dépasser le nombre total de places
-    if (hotelCount + aubergeCount > finalSeats.length) {
-      alert("Le nombre de personnes en hébergement dépasse le nombre total de places.");
-      return;
+    // Vérification : ne pas dépasser le nombre de places par catégorie
+    for (const catKey of Object.keys(accommodation)) {
+      const totalCatSeats = finalSeats.filter(s => s.category === catKey).length;
+      const acc = accommodation[catKey] || { hotel: 0, auberge: 0 };
+      if (acc.hotel + acc.auberge > totalCatSeats) {
+        alert(`Le nombre de personnes en hébergement dépasse le total pour la catégorie ${categories[catKey]?.name}`);
+        return;
+      }
     }
 
     navigate("/reservationrecap", {
@@ -35,10 +38,7 @@ export default function Reservation() {
         selectedSeats: finalSeats,
         seatCategories: categories,
         event,
-        accommodation: {
-          hotel: hotelCount,
-          auberge: aubergeCount
-        }
+        accommodation
       }
     });
   };
@@ -141,55 +141,74 @@ export default function Reservation() {
         </div>
       )}
 
-      {/* 🔹 Card Hébergement */}
+      {/* 🔹 Card Hébergement par catégorie */}
       <div className="bg-white shadow rounded-lg p-6 space-y-4">
-        <h3 className="text-xl font-semibold mb-4">Options d’hébergement</h3>
+        <h3 className="text-xl font-semibold mb-4">Options d’hébergement par catégorie</h3>
         <p className="text-gray-700">
-          Vous avez {totalSeats} place(s). Répartissez-les entre hôtel et auberge si vous le souhaitez.
+          Vous avez {totalSeats} place(s). Répartissez-les par catégorie entre hôtel et auberge.
         </p>
 
-        <div className="flex flex-col md:flex-row gap-6">
-          {/* Hôtel */}
-          <div className="flex-1">
-            <h4 className="font-bold">Hôtel partenaire</h4>
-            <p className="text-gray-600 mb-2">+100 € / personne</p>
-            <select
-              className="border rounded px-2 py-1 w-full"
-              value={hotelCount}
-              onChange={(e) => setHotelCount(parseInt(e.target.value, 10))}
-            >
-              {[...Array(totalSeats + 1).keys()].map((n) => (
-                <option key={n} value={n}>
-                  {n}
-                </option>
-              ))}
-            </select>
-          </div>
+        {Object.entries(categories).map(([catKey, cat]) => {
+          const totalCatSeats = [...selectedSeats, ...newSeats].filter(s => s.category === catKey).length;
+          if (totalCatSeats === 0) return null;
 
-          {/* Auberge */}
-          <div className="flex-1">
-            <h4 className="font-bold">Auberge de jeunesse</h4>
-            <p className="text-gray-600 mb-2">+30 € / personne</p>
-            <select
-              className="border rounded px-2 py-1 w-full"
-              value={aubergeCount}
-              onChange={(e) => setAubergeCount(parseInt(e.target.value, 10))}
-            >
-              {[...Array(totalSeats + 1).keys()].map((n) => (
-                <option key={n} value={n}>
-                  {n}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
+          const current = accommodation[catKey] || { hotel: 0, auberge: 0 };
 
-        {/* Vérification */}
-        {hotelCount + aubergeCount > totalSeats && (
-          <p className="text-red-600 font-semibold mt-2">
-            ⚠️ Vous ne pouvez pas dépasser {totalSeats} personnes au total.
-          </p>
-        )}
+          return (
+            <div key={catKey} className="border rounded p-4 mb-4">
+              <h4 className="font-bold mb-2">{cat.name} ({totalCatSeats} billet(s))</h4>
+
+              <div className="flex gap-6">
+                {/* Hôtel */}
+                <div className="flex-1">
+                  <label className="block font-semibold">Hôtel (+100€/pers)</label>
+                  <select
+                    className="border rounded px-2 py-1 w-full"
+                    value={current.hotel}
+                    onChange={(e) => {
+                      const count = parseInt(e.target.value, 10);
+                      setAccommodation(prev => ({
+                        ...prev,
+                        [catKey]: { ...current, hotel: count }
+                      }));
+                    }}
+                  >
+                    {[...Array(totalCatSeats + 1).keys()].map(n => (
+                      <option key={n} value={n}>{n}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Auberge */}
+                <div className="flex-1">
+                  <label className="block font-semibold">Auberge (+30€/pers)</label>
+                  <select
+                    className="border rounded px-2 py-1 w-full"
+                    value={current.auberge}
+                    onChange={(e) => {
+                      const count = parseInt(e.target.value, 10);
+                      setAccommodation(prev => ({
+                        ...prev,
+                        [catKey]: { ...current, auberge: count }
+                      }));
+                    }}
+                  >
+                    {[...Array(totalCatSeats + 1).keys()].map(n => (
+                      <option key={n} value={n}>{n}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Vérification */}
+              {current.hotel + current.auberge > totalCatSeats && (
+                <p className="text-red-600 font-semibold mt-2">
+                  ⚠️ Vous ne pouvez pas dépasser {totalCatSeats} personnes pour {cat.name}.
+                </p>
+              )}
+            </div>
+          );
+        })}
       </div>
 
       {/* Bouton continuer */}

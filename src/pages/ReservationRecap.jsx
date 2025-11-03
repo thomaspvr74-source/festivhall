@@ -9,7 +9,7 @@ export default function ReservationRecap() {
     selectedSeats = [],
     seatCategories = {},
     event = null,
-    accommodation = {} // ✅ récupère l’hébergement (hotel / auberge)
+    accommodation = {} // ✅ récupère l’hébergement par catégorie
   } = location.state || {};
 
   const [buyer, setBuyer] = useState({ name: "", email: "", phone: "" });
@@ -23,14 +23,12 @@ export default function ReservationRecap() {
     0
   );
 
-  // ✅ Prix de l’hébergement (panachage)
+  // ✅ Prix de l’hébergement (panachage par catégorie)
   let accommodationTotal = 0;
-  if (accommodation.hotel) {
-    accommodationTotal += accommodation.hotel * 100;
-  }
-  if (accommodation.auberge) {
-    accommodationTotal += accommodation.auberge * 30;
-  }
+  Object.entries(accommodation).forEach(([catKey, acc]) => {
+    if (acc.hotel) accommodationTotal += acc.hotel * 100;
+    if (acc.auberge) accommodationTotal += acc.auberge * 30;
+  });
 
   const grandTotal = ticketsTotal + accommodationTotal;
 
@@ -63,7 +61,7 @@ export default function ReservationRecap() {
         seatCategories,
         accommodation,
         total: grandTotal,
-        event // ✅ on envoie bien l’événement à la confirmation
+        event
       }
     });
   };
@@ -87,35 +85,59 @@ export default function ReservationRecap() {
     <div className="max-w-4xl mx-auto p-6 space-y-8">
       <h2 className="text-3xl font-bold mb-4">Récapitulatif de réservation</h2>
 
-      {/* 🔹 Billets */}
+      {/* 🔹 Billets détaillés */}
       <div className="bg-white p-6 rounded shadow">
         <h3 className="text-xl font-bold mb-2">Vos billets</h3>
         <ul className="list-disc list-inside text-gray-700">
-          {selectedSeats.map((seat, i) => (
-            <li key={i}>
-              {seat.id !== "PASS"
-                ? `Siège ${seat.id} — ${seatCategories[seat.category]?.name} (${seatCategories[seat.category]?.price}€)`
-                : `Pass Général (${seatCategories[seat.category]?.price}€)`}
-            </li>
-          ))}
+          {selectedSeats.map((seat, i) => {
+            const category = seatCategories[seat.category];
+            const catKey = seat.category;
+
+            // Déterminer l’hébergement de ce billet
+            let lodging = "Sans hébergement";
+            const acc = accommodation[catKey] || { hotel: 0, auberge: 0 };
+
+            // Compter combien de billets de cette catégorie ont déjà été listés
+            const alreadyListed = selectedSeats
+              .slice(0, i)
+              .filter(s => s.category === catKey).length;
+
+            if (alreadyListed < acc.hotel) {
+              lodging = "Hôtel partenaire";
+            } else if (alreadyListed < acc.hotel + acc.auberge) {
+              lodging = "Auberge de jeunesse";
+            }
+
+            return (
+              <li key={i}>
+                🎟️ {category?.name} —{" "}
+                {seat.id !== "PASS" ? `Siège ${seat.id}` : "Pass Général"}{" "}
+                <span className="ml-2 text-indigo-600 font-semibold">[{lodging}]</span>
+              </li>
+            );
+          })}
         </ul>
         <p className="mt-4 font-bold">Sous-total billets : {ticketsTotal} €</p>
       </div>
 
-      {/* 🔹 Hébergement */}
-      {(accommodation.hotel > 0 || accommodation.auberge > 0) && (
+      {/* 🔹 Hébergement résumé */}
+      {Object.values(accommodation).some(acc => acc.hotel > 0 || acc.auberge > 0) && (
         <div className="bg-white p-6 rounded shadow">
           <h3 className="text-xl font-bold mb-2">Hébergement</h3>
-          {accommodation.hotel > 0 && (
-            <p className="text-gray-700">
-              {accommodation.hotel} personne(s) en Hôtel partenaire (+100€/pers)
-            </p>
-          )}
-          {accommodation.auberge > 0 && (
-            <p className="text-gray-700">
-              {accommodation.auberge} personne(s) en Auberge de jeunesse (+30€/pers)
-            </p>
-          )}
+          {Object.entries(accommodation).map(([catKey, acc]) => {
+            if (!acc.hotel && !acc.auberge) return null;
+            return (
+              <div key={catKey} className="mb-2">
+                <h4 className="font-semibold">{seatCategories[catKey]?.name}</h4>
+                {acc.hotel > 0 && (
+                  <p>{acc.hotel} personne(s) en Hôtel partenaire (+100€/pers)</p>
+                )}
+                {acc.auberge > 0 && (
+                  <p>{acc.auberge} personne(s) en Auberge de jeunesse (+30€/pers)</p>
+                )}
+              </div>
+            );
+          })}
           <p className="mt-2 font-bold">Sous-total hébergement : {accommodationTotal} €</p>
         </div>
       )}
@@ -159,31 +181,53 @@ export default function ReservationRecap() {
 
         <div className="bg-white p-6 rounded shadow">
           <h3 className="text-xl font-bold mb-4">Détenteurs des billets</h3>
-          {holders.map((holder, i) => (
-            <div key={i} className="mb-4">
-              <p className="font-semibold mb-2">Billet {i + 1}</p>
-              <input
-                type="text"
-                placeholder="Prénom"
-                value={holder.firstName}
-                onChange={(e) =>
-                  handleHolderChange(i, "firstName", e.target.value)
-                }
-                className="border rounded w-full p-2 mb-2"
-                required
-              />
-              <input
-                type="text"
-                placeholder="Nom"
-                value={holder.lastName}
-                onChange={(e) =>
-                  handleHolderChange(i, "lastName", e.target.value)
-                }
-                className="border rounded w-full p-2"
-                required
-              />
-            </div>
-          ))}
+          {holders.map((holder, i) => {
+            const category = seatCategories[selectedSeats[i].category];
+            const seat = selectedSeats[i];
+
+            // Déterminer l’hébergement de ce billet
+            let lodging = "Sans hébergement";
+            const acc = accommodation[seat.category] || { hotel: 0, auberge: 0 };
+            const alreadyListed = selectedSeats
+              .slice(0, i)
+              .filter(s => s.category === seat.category).length;
+
+            if (alreadyListed < acc.hotel) {
+              lodging = "Hôtel partenaire";
+            } else if (alreadyListed < acc.hotel + acc.auberge) {
+              lodging = "Auberge de jeunesse";
+            }
+
+            return (
+              <div key={i} className="mb-4">
+                <p className="font-semibold mb-2">
+                  {category?.name} —{" "}
+                  {seat.id !== "PASS" ? `Siège ${seat.id}` : "Pass Général"}{" "}
+                  <span className="ml-2 text-indigo-600 font-semibold">[{lodging}]</span>
+                </p>
+                <input
+                  type="text"
+                  placeholder="Prénom"
+                  value={holder.firstName}
+                  onChange={(e) =>
+                    handleHolderChange(i, "firstName", e.target.value)
+                  }
+                  className="border rounded w-full p-2 mb-2"
+                  required
+                />
+                <input
+                  type="text"
+                  placeholder="Nom"
+                  value={holder.lastName}
+                  onChange={(e) =>
+                    handleHolderChange(i, "lastName", e.target.value)
+                  }
+                  className="border rounded w-full p-2"
+                  required
+                />
+              </div>
+            );
+          })}
         </div>
 
         <button
