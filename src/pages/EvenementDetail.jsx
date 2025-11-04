@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import SeatMap from "../components/SeatMap";
+import "./EvenementDetail.css";
 
 const EVENTS = {
   "symphonie-lyon": {
@@ -14,7 +15,7 @@ const EVENTS = {
     artists: ["Orchestre National de Lyon", "Soliste invité : Clara Dupont"],
     sellingText:
       "Plongez dans l’émotion d’une soirée symphonique exceptionnelle...",
-    hasSeatingPlan: true // ✅ plan de salle nécessaire
+    hasSeatingPlan: true
   },
   "rocknfest-2026": {
     title: "Rock'N Fest 2026",
@@ -26,7 +27,7 @@ const EVENTS = {
     remaining: 3200,
     artists: ["The Electric Wolves", "Stone Hearts", "DJ Rocka"],
     sellingText: "Préparez-vous à vibrer ! Rock’N Fest revient plus fort...",
-    hasSeatingPlan: false // ❌ pas de plan de salle
+    hasSeatingPlan: false
   },
   "funk-night-fever": {
     title: "Funk Night Fever",
@@ -38,7 +39,7 @@ const EVENTS = {
     remaining: 200,
     artists: ["DJ Funky Fresh", "Groove Machine Band"],
     sellingText: "Entrez dans la danse ! Funk Night Fever, c’est la promesse...",
-    hasSeatingPlan: false // ❌ pas de plan de salle
+    hasSeatingPlan: false
   }
 };
 
@@ -54,87 +55,113 @@ export default function EvenementDetail() {
     return <div className="p-6">Événement introuvable.</div>;
   }
 
-  const handleReservation = () => {
-    if (event.hasSeatingPlan) {
-      if (selectedSeats.length === 0) {
-        alert("Veuillez sélectionner au moins une place avant de réserver.");
-        return;
-      }
-      navigate("/reservation", {
-        state: { selectedSeats, seatCategories, event }
-      });
-    } else {
-      // ✅ Cas placement libre (Pass Général)
-      const genericSeat = { id: "PASS", category: "GEN", available: true };
-      const genericCategories = {
-        GEN: { name: "Pass Général", price: 50, color: "bg-purple-500" }
-      };
-      navigate("/reservation", {
-        state: { selectedSeats: [genericSeat], seatCategories: genericCategories, event }
-      });
+  const handleReservationWithSeats = () => {
+    if (selectedSeats.length === 0) {
+      alert("Veuillez sélectionner au moins une place avant de réserver.");
+      return;
     }
+    navigate("/reservation", {
+      state: { selectedSeats, seatCategories, event }
+    });
+  };
+
+  const handleReservationPass = (type) => {
+    const basePrice = 50;
+    const price = type === "VIP" ? basePrice + 30 : basePrice;
+
+    const seat = { id: type, category: type, available: true };
+    const categories = {
+      [type]: {
+        name: type === "VIP" ? "Pass VIP" : "Pass Général",
+        price,
+        color: type === "VIP" ? "bg-yellow-500" : "bg-purple-500"
+      }
+    };
+
+    navigate("/reservation", {
+      state: { selectedSeats: [seat], seatCategories: categories, event }
+    });
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-6 space-y-8">
-      {/* En-tête */}
-      <header className="bg-indigo-600 text-white p-6 rounded-lg shadow">
-        <h2 className="text-4xl font-bold mb-2">{event.title}</h2>
-        <p className="text-lg">{event.description}</p>
-        <p className="mt-2 text-sm">
-          📅 {event.date} — 📍 {event.city} | {event.type}
-        </p>
-      </header>
-
-      {/* Infos pratiques */}
-      <section className="grid md:grid-cols-2 gap-6">
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-xl font-bold mb-2">Capacité & Disponibilités</h3>
-          <p className="font-semibold">
-            Capacité totale : {event.capacity} places
+    <div
+      className="evenement-detail min-h-screen p-6"
+      style={{ backgroundImage: "url('/page_fond_evenements.png')" }}
+    >
+      <div className="max-w-6xl mx-auto space-y-8 bg-white/90 backdrop-blur-sm p-6 rounded-lg shadow-lg">
+        {/* En-tête */}
+        <header className="bg-indigo-600 text-white p-6 rounded-lg shadow">
+          <h2 className="text-4xl font-bold mb-2">{event.title}</h2>
+          <p className="text-lg">{event.description}</p>
+          <p className="mt-2 text-sm">
+            📅 {event.date} — 📍 {event.city} | {event.type}
           </p>
-          <p className="font-semibold text-green-600">
-            Places restantes : {event.remaining}
-          </p>
-        </div>
+        </header>
 
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-xl font-bold mb-2">Artistes</h3>
-          <ul className="list-disc list-inside text-gray-700">
-            {event.artists.map((artist, i) => (
-              <li key={i}>{artist}</li>
-            ))}
-          </ul>
-        </div>
-      </section>
+        {/* Infos pratiques */}
+        <section className="grid md:grid-cols-2 gap-6">
+          <div className="bg-white p-6 rounded-lg shadow">
+            <h3 className="text-xl font-bold mb-2">Capacité & Disponibilités</h3>
+            <p className="font-semibold">
+              Capacité totale : {event.capacity} places
+            </p>
+            <p className="font-semibold text-green-600">
+              Places restantes : {event.remaining}
+            </p>
+          </div>
 
-      {/* Texte vendeur */}
-      <section className="bg-yellow-50 border-l-4 border-yellow-400 p-6 rounded">
-        <h3 className="text-xl font-bold mb-2">Pourquoi venir ?</h3>
-        <p className="text-gray-700 leading-relaxed">{event.sellingText}</p>
-      </section>
-
-      {/* ✅ Plan de salle uniquement si nécessaire */}
-      {event.hasSeatingPlan && (
-        <section className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-xl font-bold mb-4">Plan de salle</h3>
-          <SeatMap
-            rows={12}
-            cols={20}
-            onSelectionChange={setSelectedSeats}
-            onCategoriesInit={setSeatCategories}
-          />
+          <div className="bg-white p-6 rounded-lg shadow">
+            <h3 className="text-xl font-bold mb-2">Artistes</h3>
+            <ul className="list-disc list-inside text-gray-700">
+              {event.artists.map((artist, i) => (
+                <li key={i}>{artist}</li>
+              ))}
+            </ul>
+          </div>
         </section>
-      )}
 
-      {/* Bouton réserver */}
-      <div className="text-center">
-        <button
-          onClick={handleReservation}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg text-lg font-semibold shadow"
-        >
-          Réserver maintenant
-        </button>
+        {/* Texte vendeur */}
+        <section className="bg-yellow-50 border-l-4 border-yellow-400 p-6 rounded">
+          <h3 className="text-xl font-bold mb-2">Pourquoi venir ?</h3>
+          <p className="text-gray-700 leading-relaxed">{event.sellingText}</p>
+        </section>
+
+        {/* ✅ Plan de salle uniquement si nécessaire */}
+        {event.hasSeatingPlan ? (
+          <section className="bg-white p-6 rounded-lg shadow">
+            <h3 className="text-xl font-bold mb-4">Plan de salle</h3>
+            <SeatMap
+              rows={12}
+              cols={20}
+              onSelectionChange={setSelectedSeats}
+              onCategoriesInit={setSeatCategories}
+            />
+            <div className="text-center mt-6">
+              <button
+                onClick={handleReservationWithSeats}
+                className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg text-lg font-semibold shadow"
+              >
+                Réserver maintenant
+              </button>
+            </div>
+          </section>
+        ) : (
+          <section className="bg-white p-6 rounded-lg shadow text-center space-y-4">
+            <h3 className="text-xl font-bold mb-4">Choisissez votre billet</h3>
+            <button
+              onClick={() => handleReservationPass("GEN")}
+              className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg text-lg font-semibold shadow w-full md:w-auto"
+            >
+              Pass Général — 50€
+            </button>
+            <button
+              onClick={() => handleReservationPass("VIP")}
+              className="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-3 rounded-lg text-lg font-semibold shadow w-full md:w-auto"
+            >
+              Pass VIP — 80€
+            </button>
+          </section>
+        )}
       </div>
     </div>
   );

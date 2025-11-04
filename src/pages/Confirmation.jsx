@@ -1,8 +1,9 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { QRCodeCanvas } from "qrcode.react"; // ✅ recommandé
+import { QRCodeCanvas } from "qrcode.react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { useRef } from "react";
+import "./Confirmation.css"; // ton CSS avec .confirmation-page
 
 export default function Confirmation() {
   const { state } = useLocation();
@@ -22,14 +23,16 @@ export default function Confirmation() {
 
   if (!event) {
     return (
-      <div className="max-w-4xl mx-auto p-6">
-        <h2 className="text-2xl font-bold mb-4">Aucune confirmation disponible</h2>
-        <button
-          onClick={() => navigate("/evenements")}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded"
-        >
-          Retour aux événements
-        </button>
+      <div className="confirmation-page min-h-screen flex items-center justify-center p-6">
+        <div className="bg-white/90 backdrop-blur-sm p-6 rounded-lg shadow-lg text-center">
+          <h2 className="text-2xl font-bold mb-4">Aucune confirmation disponible</h2>
+          <button
+            onClick={() => navigate("/evenements")}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded"
+          >
+            Retour aux événements
+          </button>
+        </div>
       </div>
     );
   }
@@ -74,122 +77,140 @@ export default function Confirmation() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto p-6 space-y-8">
-      <h2 className="text-3xl font-bold text-green-600 mb-6">
-        🎉 Réservation confirmée !
-      </h2>
+    <div className="confirmation-page min-h-screen p-6">
+      <div className="max-w-5xl mx-auto space-y-8 bg-white/90 backdrop-blur-sm p-6 rounded-lg shadow-lg">
+        <h2 className="text-3xl font-bold text-green-600 mb-6">
+          🎉 Réservation confirmée !
+        </h2>
 
-      {/* 🔹 Infos événement */}
-      <div className="bg-white p-6 rounded shadow">
-        <h3 className="text-xl font-bold mb-2">{event.title}</h3>
-        <p className="text-gray-700">
-          📅 {event.date} — 📍 {event.city}
-        </p>
-      </div>
+        {/* 🔹 Infos événement */}
+        <div className="bg-white p-6 rounded shadow">
+          <h3 className="text-xl font-bold mb-2">{event.title}</h3>
+          <p className="text-gray-700">
+            📅 {event.date} — 📍 {event.city}
+          </p>
+        </div>
 
-      {/* 🔹 Billets stylisés */}
-      <div className="bg-white p-6 rounded shadow space-y-6">
-        <h3 className="text-xl font-bold mb-4">Vos billets</h3>
-        {selectedSeats.map((seat, i) => {
-          const holder = holders[i] || {};
-          const category = seatCategories[seat.category];
-          const qrValue = JSON.stringify({
-            event: event.title,
-            date: event.date,
-            seat: seat.id,
-            category: category?.name,
-            holder: `${holder.firstName} ${holder.lastName}`,
-            accommodation
-          });
+        {/* 🔹 Billets stylisés */}
+        <div className="bg-white p-6 rounded shadow space-y-6">
+          <h3 className="text-xl font-bold mb-4">Vos billets</h3>
+          {selectedSeats.map((seat, i) => {
+            const holder = holders[i] || {};
+            const category = seatCategories[seat.category];
 
-          return (
-            <div
-              key={i}
-              ref={(el) => (ticketsRef.current[i] = el)}
-              className="ticket border-2 border-indigo-600 rounded-lg bg-white shadow-lg p-6 flex flex-col md:flex-row justify-between items-center relative overflow-hidden"
-            >
-              {/* Bandeau logo */}
-              <div className="absolute top-0 left-0 w-full bg-indigo-600 text-white text-center py-2 font-bold text-lg">
-                🎶 {event.title} — Billet Officiel
-              </div>
+            // Déterminer l’hébergement de ce billet
+            let lodging = "Sans hébergement";
+            const acc = accommodation[seat.category] || { hotel: 0, auberge: 0 };
+            const alreadyListed = selectedSeats
+              .slice(0, i)
+              .filter(s => s.category === seat.category).length;
 
-              {/* Infos billet */}
-              <div className="mt-10 flex-1">
-                <p className="text-sm text-gray-500">Billet #{i + 1}</p>
-                <h3 className="text-xl font-bold text-indigo-700 mb-2">
-                  {holder.firstName} {holder.lastName}
-                </h3>
-                <p><strong>Date :</strong> {event.date}</p>
-                <p><strong>Lieu :</strong> {event.city}</p>
-                <p>
-                  <strong>Catégorie :</strong> {category?.name} ({category?.price} €)
-                </p>
-                <p>
-                  <strong>Siège :</strong>{" "}
-                  {seat.id !== "PASS" ? seat.id : "Pass Général"}
-                </p>
-                {accommodation.hotel > 0 || accommodation.auberge > 0 ? (
+            if (alreadyListed < acc.hotel) {
+              lodging = "Hôtel partenaire";
+            } else if (alreadyListed < acc.hotel + acc.auberge) {
+              lodging = "Auberge de jeunesse";
+            }
+
+            const qrValue = JSON.stringify({
+              event: event.title,
+              date: event.date,
+              seat: seat.id,
+              category: category?.name,
+              holder: `${holder.firstName} ${holder.lastName}`,
+              lodging
+            });
+
+            // Texte du billet
+            let billetLabel = "";
+            if (seat.id !== "PASS" && seat.id !== "GEN" && seat.id !== "VIP") {
+              billetLabel = `Siège ${seat.id}`;
+            } else {
+              billetLabel = category?.name || "Billet";
+            }
+
+            return (
+              <div
+                key={i}
+                ref={(el) => (ticketsRef.current[i] = el)}
+                className="ticket border-2 border-indigo-600 rounded-lg bg-white shadow-lg p-6 flex flex-col md:flex-row justify-between items-center relative overflow-hidden"
+              >
+                {/* Bandeau logo */}
+                <div className="absolute top-0 left-0 w-full bg-indigo-600 text-white text-center py-2 font-bold text-lg">
+                  🎶 {event.title} — Billet Officiel
+                </div>
+
+                {/* Infos billet */}
+                <div className="mt-10 flex-1">
+                  <p className="text-sm text-gray-500">Billet #{i + 1}</p>
+                  <h3 className="text-xl font-bold text-indigo-700 mb-2">
+                    {holder.firstName} {holder.lastName}
+                  </h3>
+                  <p><strong>Date :</strong> {event.date}</p>
+                  <p><strong>Lieu :</strong> {event.city}</p>
                   <p>
-                    <strong>Hébergement :</strong>{" "}
-                    {accommodation.hotel > 0 && `${accommodation.hotel} en hôtel `}
-                    {accommodation.auberge > 0 && `${accommodation.auberge} en auberge`}
+                    <strong>Catégorie :</strong> {category?.name} ({category?.price} €)
                   </p>
-                ) : (
-                  <p><strong>Hébergement :</strong> Aucun</p>
-                )}
+                  <p>
+                    <strong>Siège :</strong>{" "}
+                    {seat.id !== "PASS" && seat.id !== "GEN" && seat.id !== "VIP"
+                      ? seat.id
+                      : category?.name}
+                  </p>
+                  <p><strong>Hébergement :</strong> {lodging}</p>
+                </div>
+
+                {/* QR Code + bouton individuel */}
+                <div className="flex flex-col items-center gap-2">
+                  <QRCodeCanvas value={qrValue} size={120} />
+                  <p className="text-xs text-gray-500">Scannez-moi</p>
+                  <button
+                    onClick={() =>
+                      handleDownloadSinglePDF(i, `${holder.firstName}-${holder.lastName}`)
+                    }
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm"
+                  >
+                    📄 Télécharger ce billet
+                  </button>
+                </div>
               </div>
+            );
+          })}
+        </div>
 
-              {/* QR Code + bouton individuel */}
-              <div className="flex flex-col items-center gap-2">
-                <QRCodeCanvas value={qrValue} size={120} />
-                <p className="text-xs text-gray-500">Scannez-moi</p>
-                <button
-                  onClick={() =>
-                    handleDownloadSinglePDF(i, `${holder.firstName}-${holder.lastName}`)
-                  }
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm"
-                >
-                  📄 Télécharger ce billet
-                </button>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+        {/* 🔹 Acheteur */}
+        <div className="bg-white p-6 rounded shadow">
+          <h3 className="text-xl font-bold mb-4">Coordonnées de l’acheteur</h3>
+          <p><strong>Nom :</strong> {buyer.name}</p>
+          <p><strong>Email :</strong> {buyer.email}</p>
+          <p><strong>Téléphone :</strong> {buyer.phone}</p>
+        </div>
 
-      {/* 🔹 Acheteur */}
-      <div className="bg-white p-6 rounded shadow">
-        <h3 className="text-xl font-bold mb-4">Coordonnées de l’acheteur</h3>
-        <p><strong>Nom :</strong> {buyer.name}</p>
-        <p><strong>Email :</strong> {buyer.email}</p>
-        <p><strong>Téléphone :</strong> {buyer.phone}</p>
-      </div>
+        {/* 🔹 Total */}
+        <div className="bg-indigo-50 border-l-4 border-indigo-600 p-6 rounded">
+          <h3 className="text-xl font-bold">Total payé : {total} €</h3>
+        </div>
 
-      {/* 🔹 Total */}
-      <div className="bg-indigo-50 border-l-4 border-indigo-600 p-6 rounded">
-        <h3 className="text-xl font-bold">Total payé : {total} €</h3>
-      </div>
-
-      {/* 🔹 Boutons globaux */}
-      <div className="text-center space-x-4">
-        <button
-          onClick={handleDownloadAllPDF}
-          className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold"
-        >
-          📄 Télécharger tous les billets en PDF
-        </button>
-        <button
-          onClick={() => navigate("/evenements")}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-semibold"
-        >
-          Voir d’autres événements
-        </button>
-        <button
-          onClick={() => navigate("/")}
-          className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-semibold"
-        >
-          Retour à l’accueil
-        </button>
+        {/* 🔹 Boutons globaux */}
+        <div className="text-center space-x-4">
+          <button
+            onClick={handleDownloadAllPDF}
+            className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold"
+          >
+            📄 Télécharger tous les billets en PDF
+          </button>
+          <button
+            onClick={() => navigate("/evenements")}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-semibold"
+          >
+            Voir d’autres événements
+          </button>
+          <button
+            onClick={() => navigate("/")}
+            className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-semibold"
+          >
+            Retour à l’accueil
+          </button>
+        </div>
       </div>
     </div>
   );

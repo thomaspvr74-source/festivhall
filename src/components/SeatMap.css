@@ -1,0 +1,147 @@
+.seatmap-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 600px;
+  border: 1px solid #ccc;
+  overflow: hidden;
+  background: #f9f9f9;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ✅ Scène */
+.stage {
+  width: 80%;
+  text-align: center;
+  background: #333;
+  color: white;
+  font-weight: bold;
+  padding: 8px;
+  margin: 10px 0;
+  border-radius: 4px;
+}
+
+/* Grille des sièges */
+.grid {
+  display: grid;
+  gap: 2px;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+}
+
+.seat {
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.seat:hover {
+  transform: scale(1.1);
+}
+
+/* Catégories */
+.seat.vip {
+  background: gold; /* Jaune */
+}
+.seat.standard-plus {
+  background: green; /* Vert */
+}
+.seat.standard {
+  background: blue; /* Bleu */
+}
+
+/* États */
+.seat.reserved {
+  background: grey; /* Gris */
+  cursor: not-allowed;
+}
+.seat.selected {
+  background: red; /* Rouge vif */
+}
+.seat.preselected {
+  background: #f87171; /* Rouge clair */
+}
+
+/* ✅ Mini-carte */
+.minimap {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 4px;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  z-index: 10;
+}
+
+.minimap-grid {
+  display: grid;
+  gap: 1px;
+}
+
+.mini-seat {
+  width: 2px;
+  height: 2px;
+}
+
+.mini-seat.vip {
+  background: gold;
+}
+.mini-seat.standard-plus {
+  background: green;
+}
+.mini-seat.standard {
+  background: blue;
+}
+.mini-seat.reserved {
+  background: grey;
+}
+.mini-seat.selected {
+  background: red;
+}
+.mini-seat.preselected {
+  background: #f87171;
+}
+
+/* ✅ Légende */
+.legend {
+  margin-top: 10px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 14px;
+}
+
+.legend-item {
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: white;
+  font-weight: bold;
+}
+
+.legend-item.vip {
+  background: gold;
+  color: black;
+}
+.legend-item.standard-plus {
+  background: green;
+}
+.legend-item.standard {
+  background: blue;
+}
+.legend-item.reserved {
+  background: grey;
+}
+.legend-item.selected {
+  background: red;
+}
+.legend-item.preselected {
+  background: #f87171;
+}
