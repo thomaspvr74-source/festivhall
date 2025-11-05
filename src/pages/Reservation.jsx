@@ -218,42 +218,42 @@ export default function Reservation() {
                 onChange={(e) => setVipCount(parseInt(e.target.value, 10))}
               >
                 {[...Array(21).keys()].map((n) => (
-                  <option key={n} value={n}>{n}</option>
+                                    <option key={n} value={n}>{n}</option>
                 ))}
               </select>
             </div>
           </div>
         )}
 
-                {/* 🔹 Hébergement par catégorie */}
+        {/* 🔹 Hébergement par catégorie */}
         <div className="bg-white shadow rounded-lg p-6 space-y-6">
           <h3 className="text-xl font-semibold mb-4">Options d’hébergement par catégorie</h3>
           <p className="text-gray-700">
             Vous avez {event.hasSeatingPlan ? totalSeats : totalPasses} place(s). Répartissez-les par catégorie entre hôtel et auberge de jeunesse.
           </p>
 
-          {/* Carte Billets OR */}
+          {/* Carte Billets OR (VIP) */}
           {renderAccommodationCard(
             "VIP",
-            "Billets OR",
+            event.hasSeatingPlan ? "Billets OR" : "Pass VIP",
             event.hasSeatingPlan
               ? [...selectedSeats, ...newSeats].filter(s => s.category === "VIP").length
               : vipCount
           )}
 
-          {/* Carte Billets Standard+ */}
-          {renderAccommodationCard(
-            "STANDARD_PLUS",
-            "Billets Standard+",
-            event.hasSeatingPlan
-              ? [...selectedSeats, ...newSeats].filter(s => s.category === "STANDARD_PLUS").length
-              : 0
-          )}
+          {/* Carte Billets Standard+ (uniquement si plan de salle) */}
+          {event.hasSeatingPlan &&
+            renderAccommodationCard(
+              "STANDARD_PLUS",
+              "Billets Standard+",
+              [...selectedSeats, ...newSeats].filter(s => s.category === "STANDARD_PLUS").length
+            )
+          }
 
-          {/* Carte Billets Standard */}
+          {/* Carte Billets Standard (ou Pass Général si pas de plan de salle) */}
           {renderAccommodationCard(
-            "STANDARD",
-            "Billets Standard",
+            event.hasSeatingPlan ? "STANDARD" : "GEN",
+            event.hasSeatingPlan ? "Billets Standard" : "Pass Général",
             event.hasSeatingPlan
               ? [...selectedSeats, ...newSeats].filter(s => s.category === "STANDARD").length
               : generalCount

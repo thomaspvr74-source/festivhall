@@ -5,7 +5,7 @@ export default function Concept() {
     <div className="concept-page">
       <div className="max-w-4xl mx-auto p-6 text-white">
         {/* Titre en dehors de la card */}
-        <h2 className="text-3xl font-bold mb-8 text-center">Le concept Festiv’Hall</h2>
+        <h2 className="text-3xl font-bold mb-8 text-center">Festiv’hall, l’espace modulable pour tous vos événements</h2>
 
         {/* Grande card pour le texte */}
         <div className="bg-white/10 backdrop-blur-md rounded-lg shadow-lg p-8">
@@ -15,26 +15,27 @@ export default function Concept() {
           </p>
 
           <p className="mb-4">
-            La structure peut également se déplacer pour installer des scènes et infrastructures lors de festivals,
-            offrant ainsi une flexibilité unique aux organisateurs.
+            Festiv’hall est bien plus qu’un simple entrepôt : c’est une halle moderne et polyvalente,
+            pensée pour accueillir des événements de toutes tailles et de toutes natures. Concerts, 
+            salons, conférences, mariages, soirées privées ou séminaires d’entreprise… l’espace 
+            s’adapte à vos besoins grâce à une configuration modulable et des équipements techniques 
+            performants.
           </p>
 
           <p className="mb-4">
-            En partenariat avec des hôtels, auberges de jeunesse et restaurateurs (food trucks, bars), Festiv’Hall
-            propose une expérience complète : hébergement, restauration et ambiance festive. 
-            Les food trucks peuvent s’installer directement dans la halle ou à l’extérieur, et un bar partenaire
-            exploite l’espace bar intégré pour servir les festivaliers.
+            Privatisable à la demande, Festiv’hall offre une solution clé en main aussi bien pour 
+            les particuliers que pour les professionnels. Son architecture flexible permet de transformer 
+            la halle en un lieu intimiste ou en une grande scène capable de recevoir un public nombreux.
           </p>
 
           <p className="mb-4">
-            L’objectif est de créer un lieu vivant et modulable, capable de s’adapter à toutes les tailles
-            d’événements, tout en dynamisant le tissu touristique et culturel local.
+            Avec ses espaces annexes (loges, zones de restauration, parkings), Festiv’hall garantit 
+            confort et praticité pour les organisateurs comme pour les invités. 
+            Notre ambition : faire de chaque événement une expérience unique, dans un lieu qui 
+            s’adapte à vous.
           </p>
 
-          <p>
-            Festiv’Hall, c’est bien plus qu’une salle : c’est un écosystème complet au service des artistes,
-            des entreprises, des organisateurs et du public.
-          </p>
+          
         </div>
       </div>
     </div>

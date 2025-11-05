@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import Evenements from './pages/Evenements';
 import Artistes from './pages/Artistes';
 import Privatisation from './pages/Privatisation';
+import PrivatisationForm from "./pages/PrivatisationForm";
 import Concept from './pages/Concept'; // ✅ nouvelle page
 import './App.css';
 import EvenementDetail from './pages/EvenementDetail'; // ✅ AJOUTER CETTE LIGNE
@@ -47,6 +48,7 @@ export default function App() {
             <Route path="/evenements/:id" element={<EvenementDetail />} /> {/* ✅ nouvelle route */}
             <Route path="/artistes" element={<Artistes />} />
             <Route path="/privatisation" element={<Privatisation />} />
+            <Route path="/privatisation-form" element={<PrivatisationForm />} /> {/* ✅ nouvelle route */}
             <Route path="/concept" element={<Concept />} /> {/* ✅ nouvelle route */}
             <Route path="/reservation" element={<Reservation />} />
             <Route path="/reservationrecap" element={<ReservationRecap />} />

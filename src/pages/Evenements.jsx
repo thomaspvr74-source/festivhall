@@ -9,7 +9,7 @@ const EVENTS = [
     city: 'Lyon', 
     type: 'Classique', 
     description: 'Orchestre symphonique & solistes — une soirée inoubliable.',
-    image: import.meta.env.BASE_URL + 'symphonie-lyon.png'
+    image: import.meta.env.BASE_URL + '/symphonie-lyon.png'
   },
   { 
     id: 'rocknfest-2026', 
@@ -18,7 +18,7 @@ const EVENTS = [
     city: 'Lyon', 
     type: 'Festival', 
     description: 'Trois jours de rock, têtes d’affiche et talents émergents.',
-    image: import.meta.env.BASE_URL + 'rocknfest.png'
+    image: import.meta.env.BASE_URL + '/rocknfest.png'
   },
   { 
     id: 'funk-night-fever', 
@@ -27,7 +27,7 @@ const EVENTS = [
     city: 'Lyon', 
     type: 'Club', 
     description: 'Soirée funk et groove — DJ et live band.',
-    image: import.meta.env.BASE_URL + 'funk-night.png'
+    image: import.meta.env.BASE_URL + '/funk-night.png'
   },
 ];
 
